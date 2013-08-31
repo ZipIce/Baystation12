@@ -91,10 +91,13 @@ var/list/diseases = typesof(/datum/disease) - /datum/disease
 		for(var/C_list in cure_list)
 			if(istype(C_list, /list))
 				for(var/C_id in cure_id)
+					if(affected_mob.reagents != null)	//Grutor: Fixed some run time errors
+						result = 0
 					if(!affected_mob.reagents.has_reagent(C_id))
 						result = 0
-			else if(!affected_mob.reagents.has_reagent(C_list))
-				result = 0
+			else if(affected_mob.reagents != null)			//Grutor: Fixed some run time errors
+				if(!affected_mob.reagents.has_reagent(C_list))
+					result = 0
 
 	return result
 
@@ -123,10 +126,10 @@ var/list/diseases = typesof(/datum/disease) - /datum/disease
 			source = affected_mob
 		else //no source and no mob affected. Rogue disease. Break
 			return
-
-	if(affected_mob)
-		if(affected_mob.reagents.has_reagent("spaceacillin"))
-			return // Don't spread if we have spaceacillin in our system.
+	if(affected_mob.reagents != null)		//Grutor: Fixed some runtime errors
+		if(affected_mob)
+			if(affected_mob.reagents.has_reagent("spaceacillin"))
+				return // Don't spread if we have spaceacillin in our system.
 
 	var/check_range = airborne_range//defaults to airborne - range 2
 
